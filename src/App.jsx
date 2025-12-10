@@ -7,7 +7,9 @@ function App() {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    fetch("https://notesapp-backend-576p.onrender.com", { credentials: "include" })
+    fetch("https://notesapp-backend-576p.onrender.com/check", {
+      credentials: "include"
+    })
       .then((res) => res.json())
       .then((data) => {
         setLoggedIn(data.loggedIn);
@@ -16,21 +18,18 @@ function App() {
           setUsername(data.username);
         }
 
-        setLoading(false);  // stop loading
-      })
-      .catch(() => {
         setLoading(false);
-      });
+      })
+      .catch(() => setLoading(false));
   }, []);
 
-  // 🔥 WAIT for backend — don't redirect immediately
   if (loading) {
     return <div className="text-white p-5">Checking session...</div>;
   }
 
-  // ❌ Only redirect AFTER backend confirms loggedOut
   if (!loggedIn) {
-    window.location.href = "https://notesapp-backend-576p.onrender.com/login";
+    window.location.href =
+      "https://notesapp-backend-576p.onrender.com/login";
     return null;
   }
 
