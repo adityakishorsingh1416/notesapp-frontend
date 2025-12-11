@@ -138,7 +138,6 @@ const Notes = ({ username }) => {
         </div>
 
         {/* FORM + LIST SAME AS YOUR CODE */}
-        ...
       </div>
     </div>
   );
