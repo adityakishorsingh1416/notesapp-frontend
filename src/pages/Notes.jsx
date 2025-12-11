@@ -18,9 +18,7 @@ const Notes = ({ username }) => {
     try {
       const res = await fetch(
         "https://notesapp-backend-576p.onrender.com/api/notes",
-        {
-          credentials: "include"   // ✅ REQUIRED
-        }
+        { credentials: "include" }
       );
       const data = await res.json();
       setTask(data);
@@ -44,10 +42,8 @@ const Notes = ({ username }) => {
         "https://notesapp-backend-576p.onrender.com/api/notes",
         {
           method: "POST",
-          credentials: "include",    // ✅ REQUIRED
-          headers: {
-            "Content-Type": "application/json",
-          },
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             heading: details,
             content: title,
@@ -72,7 +68,7 @@ const Notes = ({ username }) => {
         `https://notesapp-backend-576p.onrender.com/api/notes/${id}`,
         {
           method: "DELETE",
-          credentials: "include",  // ✅ REQUIRED
+          credentials: "include",
         }
       );
 
@@ -95,10 +91,8 @@ const Notes = ({ username }) => {
         `https://notesapp-backend-576p.onrender.com/api/notes/${editId}`,
         {
           method: "PUT",
-          credentials: "include",   // ✅ REQUIRED
-          headers: {
-            "Content-Type": "application/json",
-          },
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             heading: editDetails,
             content: editTitle,
@@ -124,6 +118,7 @@ const Notes = ({ username }) => {
     <div className="min-h-screen bg-gradient-to-br from-purple-500 via-indigo-500 to-blue-500 flex justify-center items-start py-10 px-4">
       <div className="w-full max-w-xl bg-white/20 backdrop-blur-lg shadow-2xl rounded-2xl p-8 border border-white/30">
 
+        {/* TOP BAR */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-white text-xl font-semibold">
             Welcome, <span className="text-pink-300 font-bold">{username}</span>
@@ -137,7 +132,92 @@ const Notes = ({ username }) => {
           </button>
         </div>
 
-        {/* FORM + LIST SAME AS YOUR CODE */}
+        {/* ADD FORM */}
+        <form onSubmit={submitt} className="flex flex-col gap-4">
+          <input
+            type="text"
+            placeholder="Enter notes heading..."
+            value={details}
+            onChange={(e) => setDetails(e.target.value)}
+            className="px-4 py-3 rounded-xl bg-white/70 focus:bg-white text-gray-700 shadow-md transition-all"
+          />
+
+          <input
+            type="text"
+            placeholder="Enter the details..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="px-4 py-3 rounded-xl bg-white/70 focus:bg-white text-gray-700 shadow-md transition-all"
+          />
+
+          <button className="px-4 py-3 mt-1 rounded-xl bg-gradient-to-r from-pink-500 to-violet-600 text-white font-bold shadow-lg hover:shadow-2xl transition-all">
+            Add Notes
+          </button>
+        </form>
+
+        {/* NOTES LIST */}
+        <div className="mt-8 space-y-4">
+          {task.map((note) => (
+            <div
+              key={note._id}
+              className="p-5 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg border border-white/30"
+            >
+              {editId === note._id ? (
+                <div className="space-y-3">
+                  <input
+                    className="p-3 rounded-lg w-full text-black"
+                    value={editDetails}
+                    onChange={(e) => setEditDetails(e.target.value)}
+                  />
+
+                  <input
+                    className="p-3 rounded-lg w-full text-black"
+                    value={editTitle}
+                    onChange={(e) => setEditTitle(e.target.value)}
+                  />
+
+                  <button
+                    onClick={saveEdit}
+                    className="px-4 py-2 bg-green-500 text-white rounded-lg mr-3"
+                  >
+                    Save
+                  </button>
+
+                  <button
+                    onClick={() => setEditId(null)}
+                    className="px-4 py-2 bg-gray-400 text-white rounded-lg"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <h2 className="text-white font-bold text-xl">
+                    {note.heading}
+                  </h2>
+                  <p className="text-white/90 mt-1">{note.content}</p>
+
+                  <div className="flex gap-4 mt-3">
+                    <button
+                      onClick={() => startEdit(note)}
+                      className="px-4 py-2 bg-yellow-400 text-black font-semibold rounded-lg shadow transition"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() => deleteNote(note._id)}
+                      className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow transition"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
       </div>
     </div>
   );
